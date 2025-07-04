@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="view_opcua_data_list" model="ir.ui.view">
+        <field name="name">opcua.data.list</field>
+        <field name="model">opcua.data</field>
+        <field name="arch" type="xml">
+            <list string="OPC UA Data">
+                <field name="timestamp"/>
+                <field name="node_id"/>
+                <field name="value"/>
+                <field name="error"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_opcua_data_form" model="ir.ui.view">
+        <field name="name">opcua.data.form</field>
+        <field name="model">opcua.data</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="device_id"/>
+                        <field name="timestamp"/>
+                        <field name="node_id"/>
+                        <field name="value"/>
+                        <field name="error"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_opcua_data_search" model="ir.ui.view">
+        <field name="name">opcua.data.search</field>
+        <field name="model">opcua.data</field>
+        <field name="arch" type="xml">
+            <search string="OPC UA Data">
+                <field name="timestamp"/>
+                <field name="node_id"/>
+                <field name="value"/>
+                <field name="error"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_opcua_data" model="ir.actions.act_window">
+        <field name="name">OPC UA Data</field>
+        <field name="res_model">opcua.data</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_opcua_data_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first OPC UA data point
+            </p>
+            <p>
+                Configure OPC UA data points to monitor your industrial devices.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_opcua_root" 
+              name="OPC UA"
+              sequence="100"/>
+
+    <menuitem id="menu_opcua_data"
+              name="Data Points"
+              parent="menu_opcua_root"
+              action="action_opcua_data"
+              sequence="10"/>
+</odoo> 

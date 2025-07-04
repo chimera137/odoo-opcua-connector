@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="view_opcua_device_list" model="ir.ui.view">
+        <field name="name">opcua.device.list</field>
+        <field name="model">opcua.device</field>
+        <field name="arch" type="xml">
+            <list string="OPC UA Devices">
+                <field name="name"/>
+                <field name="endpoint"/>
+                <field name="connection_status"/>
+                <field name="error_message"/>
+                <field name="data_count"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_opcua_device_form" model="ir.ui.view">
+        <field name="name">opcua.device.form</field>
+        <field name="model">opcua.device</field>
+        <field name="arch" type="xml">
+            <form string="OPC UA Device">
+                <header>
+                    <button name="test_connection" string="Test Connection" type="object" class="oe_highlight"/>
+                    <button name="fetch_data" string="Fetch Data" type="object" class="btn-primary"/>
+                    <button name="action_clear_historical_data" string="Clear Historical Data" type="object" class="btn-secondary"/>
+                    <button name="action_start_polling" string="Start Auto Polling" type="object" class="btn-success"/>
+                    <button name="action_stop_polling" string="Stop Auto Polling" type="object" class="btn-danger"/>
+                    <field name="connection_status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="endpoint"/>
+                            <field name="api_port"/>
+                            <field name="api_url" readonly="1"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="polling_interval"/>
+                            <field name="error_message"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="connection_status"/>
+                            <field name="data_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Nodes" name="nodes">
+                            <field name="node_ids" context="{'default_device_id': id}">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="node_id"/>
+                                    <field name="value"/>
+                                    <field name="unit"/>
+                                    <field name="state"/>
+                                    <field name="last_update"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Historical Data" name="historical_data">
+                            <field name="data_count"/>
+                            <button name="action_view_data" string="View Historical Data" type="object" class="btn-primary"/>
+                            <button name="action_clear_historical_data" string="Clear Historical Data" type="object" class="btn-danger"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_opcua_device_search" model="ir.ui.view">
+        <field name="name">opcua.device.search</field>
+        <field name="model">opcua.device</field>
+        <field name="arch" type="xml">
+            <search string="Search OPC UA Devices">
+                <field name="name"/>
+                <field name="endpoint"/>
+                <separator/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Connected" name="connected" domain="[('connection_status', '=', 'connected')]"/>
+                <filter string="Error" name="error" domain="[('connection_status', '=', 'error')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Connection Status" name="group_by_status" context="{'group_by': 'connection_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_opcua_device" model="ir.actions.act_window">
+        <field name="name">OPC UA Devices</field>
+        <field name="res_model">opcua.device</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_opcua_device_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first OPC UA device
+            </p>
+            <p>
+                Define OPC UA devices to connect to your OPC UA servers.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_opcua_device"
+              name="Devices"
+              parent="menu_opcua_root"
+              action="action_opcua_device"
+              sequence="10"/>
+
+    <!-- OPC UA Data List View -->
+    <record id="view_opcua_data_list" model="ir.ui.view">
+        <field name="name">opcua.data.list</field>
+        <field name="model">opcua.data</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="timestamp"/>
+                <field name="node_id"/>
+                <field name="value"/>
+                <field name="error"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- OPC UA Data Form View -->
+    <record id="view_opcua_data_form" model="ir.ui.view">
+        <field name="name">opcua.data.form</field>
+        <field name="model">opcua.data</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="device_id"/>
+                        <field name="timestamp"/>
+                        <field name="node_id"/>
+                        <field name="value"/>
+                        <field name="error"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- OPC UA Data Action -->
+    <record id="action_opcua_data" model="ir.actions.act_window">
+        <field name="name">OPC UA Data</field>
+        <field name="res_model">opcua.data</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Historical Data Menu -->
+    <menuitem id="menu_opcua_data"
+              name="Historical Data"
+              parent="menu_opcua_root"
+              action="action_opcua_data"
+              sequence="20"/>
+
+    <!-- Root Menu -->
+    <menuitem id="menu_opcua_root"
+              name="OPC UA Connector"
+              sequence="10"/>
+
+</odoo> 

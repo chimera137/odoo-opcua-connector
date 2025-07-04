@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_opcua_node_tree" model="ir.ui.view">
+        <field name="name">opcua.node.tree</field>
+        <field name="model">opcua.node</field>
+        <field name="arch" type="xml">
+            <tree string="OPC UA Nodes" decoration-success="state == 'normal'" decoration-warning="state == 'warning'" decoration-danger="state == 'critical'">
+                <field name="name"/>
+                <field name="node_id"/>
+                <field name="device_id"/>
+                <field name="value"/>
+                <field name="unit"/>
+                <field name="state"/>
+                <field name="last_update"/>
+                <field name="connection_status"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_opcua_node_form" model="ir.ui.view">
+        <field name="name">opcua.node.form</field>
+        <field name="model">opcua.node</field>
+        <field name="arch" type="xml">
+            <form string="OPC UA Node">
+                <header>
+                    <field name="state" widget="state_selection"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Node Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="node_id"/>
+                            <field name="device_id"/>
+                            <field name="data_type"/>
+                            <field name="unit"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="value"/>
+                            <field name="last_update"/>
+                            <field name="connection_status"/>
+                            <field name="error_message" widget="text" nolabel="1" attrs="{'invisible': [('error_message', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Value Range" name="value_range">
+                            <group>
+                                <field name="min_value"/>
+                                <field name="max_value"/>
+                            </group>
+                        </page>
+                        <page string="Thresholds" name="thresholds">
+                            <group>
+                                <field name="warning_threshold"/>
+                                <field name="critical_threshold"/>
+                            </group>
+                        </page>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Add a description for this node..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_opcua_node_search" model="ir.ui.view">
+        <field name="name">opcua.node.search</field>
+        <field name="model">opcua.node</field>
+        <field name="arch" type="xml">
+            <search string="Search OPC UA Nodes">
+                <field name="name"/>
+                <field name="node_id"/>
+                <field name="device_id"/>
+                <separator/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Warning" name="warning" domain="[('state', '=', 'warning')]"/>
+                <filter string="Critical" name="critical" domain="[('state', '=', 'critical')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Device" name="group_by_device" context="{'group_by': 'device_id'}"/>
+                    <filter string="State" name="group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_opcua_node" model="ir.actions.act_window">
+        <field name="name">OPC UA Nodes</field>
+        <field name="res_model">opcua.node</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_opcua_node_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first OPC UA node
+            </p>
+            <p>
+                Define OPC UA nodes to monitor specific data points from your devices.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_opcua_node"
+              name="Nodes"
+              parent="menu_opcua_root"
+              action="action_opcua_node"
+              sequence="20"/>
+</odoo> 

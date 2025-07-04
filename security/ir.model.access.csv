@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_opcua_device_user,opcua.device user,model_opcua_device,base.group_user,1,0,0,0
+access_opcua_device_manager,opcua.device manager,model_opcua_device,base.group_system,1,1,1,1
+access_opcua_data_user,opcua.data user,model_opcua_data,base.group_user,1,0,0,0
+access_opcua_data_manager,opcua.data manager,model_opcua_data,base.group_system,1,1,1,1
+access_opcua_node_user,access.opcua.node.user,model_opcua_node,base.group_user,1,1,1,1
+access_opcua_node_manager,access.opcua.node.manager,model_opcua_node,base.group_system,1,1,1,1
