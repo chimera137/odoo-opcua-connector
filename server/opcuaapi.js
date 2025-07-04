@@ -167,53 +167,9 @@ app.get('/test', async (req, res) => {
     res.json(result);
 });
 
-// Disconnect endpoint: Close a specific OPC UA connection
-app.post('/disconnect', async (req, res) => {
-    const { endpoint } = req.body;
-
-    if (!endpoint) {
-        return res.status(400).json({
-            error: "Invalid request",
-            message: "Missing endpoint parameter"
-        });
-    }
-
-    try {
-        const key = getServerKey(endpoint);
-        if (connectionPool.has(key)) {
-            const { client } = connectionPool.get(key);
-            await safeDisconnect(client);
-            connectionPool.delete(key);
-        }
-        res.json({
-            message: "Connection closed successfully",
-            server: { endpoint }
-        });
-    } catch (error) {
-        console.error(`[${new Date().toISOString()}] Failed to close connection for ${endpoint}: ${error.message}`);
-        res.status(500).json({
-            error: "Failed to close connection",
-            message: error.message
-        });
-    }
-});
-
-// Connections endpoint: List all active connections in the pool
-app.get('/connections', (req, res) => {
-    const connections = Array.from(connectionPool.entries()).map(([key, { client, session }]) => ({
-        endpoint: key,
-        isConnected: client ? client.isConnected : false,
-        hasSession: !!session
-    }));
-
-    res.json({ connections });
-});
-
 // Start the server
 app.listen(port, () => {
     console.log(`🌐 OPC UA REST API running at http://host.docker.internal:${port}`);
     console.log(`📝 Data endpoint: POST http://host.docker.internal:${port}/data (requires endpoint and node_ids in body)`);
-    console.log(`📝 Test endpoint: GET http://host.docker.internal:${port}/test?endpoint=<endpoint>`);
-    console.log(`📝 Connections endpoint: GET http://host.docker.internal:${port}/connections`);
-    console.log(`📝 Disconnect endpoint: POST http://host.docker.internal:${port}/disconnect with body { "endpoint": "<endpoint>" }`);
+    console.log("API server is ready to receive data requests with device configurations.");
 });

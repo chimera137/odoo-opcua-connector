@@ -50,6 +50,7 @@ Read OPC UA node values from a device.
   "error": null,
   "connectionStatus": "connected"
 }
+
 ```
 - All configuration is provided per-request in the body.
 - The server manages connections and will reconnect as needed.
